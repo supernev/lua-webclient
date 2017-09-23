@@ -50,11 +50,12 @@ end
 -- @tab[opt] get get的参数
 -- @param[opt] post post参数，table or string类型 
 -- @bool[opt] no_reply 使用skynet.call则要设置为nil或false，使用skynet.send则要设置为true
+-- @param[opt] headers HTTP headers字符串列表
 -- @treturn bool 请求是否成功
 -- @treturn string 当成功时，返回内容，当失败时，返回出错原因 
 -- @usage skynet.call(webclient, "lua", "request", "http://www.dpull.com")
 -- @usage skynet.send(webclient, "lua", "request", "http://www.dpull.com", nil, nil, true)
-local function request(url, get, post, no_reply)
+local function request(url, get, post, no_reply, headers)
     if get then
         local i = 0
         for k, v in pairs(get) do
@@ -83,6 +84,12 @@ local function request(url, get, post, no_reply)
     end
     assert(key)
 
+    if headers then
+        for _, header in ipairs(headers) do
+            webclient:set_httpheader(req, header)
+        end
+    end
+    
     local response = nil
     if not no_reply then
         response = skynet.response()
