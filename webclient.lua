@@ -85,9 +85,7 @@ local function request(url, get, post, no_reply, headers)
     assert(key)
 
     if headers then
-        for _, header in ipairs(headers) do
-            webclient:set_httpheader(req, header)
-        end
+        webclient:set_httpheader(req, table.unpack(headers))
     end
     
     local response = nil
